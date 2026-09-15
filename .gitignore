@@ -1,0 +1,30 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Data & models — these go to DVC/S3, never Git
+data/
+models/
+
+# DVC internals
+/.dvc/cache
+/.dvc/tmp
+
+# MLflow local tracking
+mlruns/
+
+# Environment secrets (AWS keys etc.) — NEVER commit these
+.env
+*.pem
+
+# OS / editor noise
+.DS_Store
+.vscode/
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
