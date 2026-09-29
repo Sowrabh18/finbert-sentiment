@@ -7,8 +7,8 @@ __pycache__/
 *.egg-info/
 
 # Data & models — these go to DVC/S3, never Git
-data/
-models/
+/data/
+/models/
 
 # DVC internals
 /.dvc/cache
