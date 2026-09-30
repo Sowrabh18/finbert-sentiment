@@ -7,8 +7,14 @@ __pycache__/
 *.egg-info/
 
 # Data & models — these go to DVC/S3, never Git
-/data/
-/models/
+# Data & models — the actual files go to DVC/S3, never Git.
+# We ignore data files by TYPE (not the whole folder) so Git can still
+# see and track the small .dvc receipts inside data/.
+/data/**/*.csv
+/models/**/*.pkl
+/models/**/*.bin
+/models/**/*.pt
+/models/**/*.safetensors
 
 # DVC internals
 /.dvc/cache
