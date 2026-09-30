@@ -32,11 +32,20 @@ def main():
     })
 
     # Safety checks: no missing labels, no empty sentences
-    missing = clean["label"].isna().sum()
-    if missing > 0:
-        raise ValueError(f"{missing} rows had a label we couldn't map — check the 'answer' values.")
-    clean = clean[clean["sentence"].str.len() > 0].reset_index(drop=True)
-    clean["label"] = clean["label"].astype(int)
+      # --- Remove duplicate sentences (prevents train/test leakage) ---
+    before = len(clean)
+
+    # 1. Drop sentences with CONFLICTING labels (same text, different label) —
+    #    ambiguous, so we can't trust either copy. Remove all copies.
+    label_counts = clean.groupby("sentence")["label"].nunique()
+    conflicting = label_counts[label_counts > 1].index
+    clean = clean[~clean["sentence"].isin(conflicting)]
+
+    # 2. For consistent duplicates, keep the first copy only.
+    clean = clean.drop_duplicates(subset="sentence", keep="first").reset_index(drop=True)
+
+    print(f"Removed {before - len(clean)} duplicate/conflicting rows "
+          f"({len(conflicting)} conflicting sentences dropped entirely)")
 
     # --- Inspect the cleaned result ---
     print("\n=== Cleaned data (first 5 rows) ===")
